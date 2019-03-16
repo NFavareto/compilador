@@ -1,33 +1,13 @@
 mixin navbar()
-    nav.navbar(
-        style='min-height: 80px; background: black; '
-    )
-        .navbar-brand.navbar-fontcolor  
-            img.d-inline-block(src='/images/code.svg', width='38', height='38', alt='')
-            |  #[strong Compilador] #[span(style='font-size:13px;') v1.0.0] 
-        .nav
-            ul.mr-auto
-                li.nav-item.active
-                    a.nav-link(href='#') Left
-                li.nav-item
-                    a.nav-link(href='//codeply.com') Codeply
-                li.nav-item
-                    a.nav-link(href='#') Link
-                li.nav-item
-                    a.nav-link(href='#') Link
-                li.nav-item
-                    a.nav-link(href='#') Link
-
-mixin teste()
     nav.navbar.navbar-expand-lg(style='min-height: 80px; background: black; ')
         .navbar-brand.navbar-fontcolor  
-            img.d-inline-block(src='/images/code.svg', width='38', height='38', alt='')
+            img.d-inline-block(src='/images/code.svg', width='40', height='40', alt='')
             |  #[strong Compilador] #[span(style='font-size:13px;') v1.0.0] 
         #navbarNavAltMarkup.collapse.navbar-collapse 
             .navbar-nav.navbar-fontcolor  
-                .nav-item.nav-link.active(href='#')
-                    | Run 
-                    span.sr-only (current)
-                .nav-item.nav-link(href='#') Open File
+                a.nav-item.nav-link.active(href='#')
+                    img.d-inline-block(src='/images/play.svg' width='28' height='28' alt='')
+                a.nav-item.nav-link.active(href='#')
+                    img.d-inline-block(src='/images/open-folder.svg' width='28' height='28' alt='')
 
 
