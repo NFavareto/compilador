@@ -1,0 +1,28 @@
+include ./mixins/head
+include ./mixins/footer
+include ./mixins/loading
+include ./mixins/scripts
+include ./mixins/editor
+include ./mixins/preview
+
+doctype html
+html(lang="pt-br")
+    block head
+        +head()
+
+    body
+
+        #inner-box
+            //- block loading   
+            //-     +loading-animation()
+            block editor
+                +editor()
+
+            block preview
+                +previewCode()
+        
+        block footer
+            +footer()
+        
+        block scripts   
+            +scriptsBody()

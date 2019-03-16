@@ -1,0 +1,149 @@
+/* 
+    *** Documento inteiro e navbar superior9menu
+*/
+
+* {
+    padding-left: 0px;
+    margin-left: 0px;
+}
+
+body {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-content: stretch;
+}
+
+/*
+    *** section de console
+*/
+#console {
+    height: 50vh;
+    overflow-y: scroll;
+}
+
+#console::-webkit-scrollbar-track
+{
+    box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	background-color: #343a40;
+}
+
+#console::-webkit-scrollbar
+{
+	width: 10px;
+	background-color: #343a40;
+}
+
+#console::-webkit-scrollbar-thumb
+{
+	background-color: #343a40;
+	border: 2px solid #555555;
+}
+
+/*
+    *** section de tabela
+*/
+#tabela {
+    height: 22vh;
+    overflow-y: scroll;
+}
+
+#tabela::-webkit-scrollbar-track
+{
+	box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	background-color: #343a40;
+}
+
+#tabela::-webkit-scrollbar
+{
+	width: 10px;
+	background-color: #343a40;
+}
+
+#tabela::-webkit-scrollbar-thumb
+{
+	background-color: #343a40;
+	border: 2px solid #555555;
+}
+
+
+/*
+    *** section de editor de códigos
+*/
+#code {
+    flex: 1;
+    overflow-y: scroll;
+}
+
+#code::-webkit-scrollbar-track
+{
+	/* -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); */
+	background-color: rgba(0,0,0,0.2);
+}
+
+#code::-webkit-scrollbar
+{
+	width: 20px;
+	background-color: #3a3d41;
+}
+
+#code::-webkit-scrollbar-thumb
+{
+	background-color: #555555;
+	border: 2px solid #555555;
+}
+
+p {
+    /* retirnado o pontilhado de seleção do P editor*/
+    outline: none;
+}
+
+#contador_linha {
+    height: 24px;
+}
+
+#editor {
+    /*Cor do funco e das letras da section editor*/
+    color: #555555;
+}
+
+#linha { 
+    white-space: pre-wrap;
+}
+
+#linha > div {
+    height: 24px;
+}
+
+
+form label,
+form button {
+    background-color: transparent;
+    height: 0px;
+}
+
+/* CSS Styles */
+/*
+#linha > div{
+    background-color: rgba(0,0,0,0.05);
+}
+*/
+
+#linha > div:focus{
+    /*background: #FFFF00;*/
+    background: #3a3d41;
+}
+#linha > div::selection{
+    /*background: #00FF00;*/
+    background: #0662d2;
+}
+#linha > div:hover{
+    background: #3a3d41;
+    border: 1px solid #3a3d41;
+}
+
+#inner-box {
+    display: flex;
+}
+
