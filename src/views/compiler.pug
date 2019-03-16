@@ -4,6 +4,7 @@ include ./mixins/loading
 include ./mixins/scripts
 include ./mixins/editor
 include ./mixins/preview
+include ./mixins/navbar
 
 doctype html
 html(lang="pt-br")
@@ -11,7 +12,8 @@ html(lang="pt-br")
         +head()
 
     body
-
+        block navbar
+            +teste()
         #inner-box
             //- block loading   
             //-     +loading-animation()
