@@ -4,10 +4,15 @@ mixin navbar()
             img.d-inline-block(src='/images/code.svg', width='40', height='40', alt='')
             |  #[strong Compilador] #[span(style='font-size:13px;') v1.0.0] 
         #navbarNavAltMarkup.collapse.navbar-collapse 
-            .navbar-nav.navbar-fontcolor  
-                a.nav-item.nav-link.active(href='#')
-                    img.d-inline-block(src='/images/play.svg' width='28' height='28' alt='')
+            .navbar-nav.navbar-fontcolor
+                form.nav-item.nav-link.active(action="/analise-lexica", method="get" target='_blank')  
+                    button(type="submit" style='background-color:transparent; border:0')
+                        img.d-inline-block(src='/images/play.svg' width='28' height='28' alt='')
                 a.nav-item.nav-link.active(href='#')
                     img.d-inline-block(src='/images/open-folder.svg' width='28' height='28' alt='')
 
-
+mixin navbarDefault()
+    nav.navbar.navbar-expand-lg(style='min-height: 80px; background: black; ')
+        .navbar-brand.navbar-fontcolor  
+            img.d-inline-block(src='/images/code.svg', width='40', height='40', alt='')
+            |  #[strong Análise Léxica ]  

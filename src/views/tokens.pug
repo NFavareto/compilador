@@ -2,27 +2,22 @@ include ./mixins/head
 include ./mixins/footer
 include ./mixins/loading
 include ./mixins/scripts
-include ./mixins/editor
-include ./mixins/terminal
 include ./mixins/navbar
+include ./mixins/table
 
 doctype html
 html(lang="pt-br")
     block head
         +head()
-        title Compilador
+        title Análise Léxica
 
     body
         block navbar
-            +navbar()
-        #inner-box
-            //- block loading   
-            //-     +loading-animation()
-            block editor
-                +editor()
-
-            block terminal
-                +terminal()
+            +navbarDefault()
+        
+        block table
+            +table()
+       
         
         block footer
             +footer()

@@ -1,0 +1,63 @@
+
+inicio = "comecaaqui",{dec_variavel}*,programa,"terminaaqui"
+
+dec_variavel = int | float
+
+int = "int", identificador, operador_atribuicao, numero,";"
+
+float = "float", identificador, operador_atribuicao, numero,".",numero,";"
+
+
+
+programa = if | while | for | expressao |[programa]
+
+if =  "if","(",comparacao,")","{" programa "}"
+    | "if","(",comparacao,")","{" programa "}",["else","{",programa,"}"]
+
+
+while= "while","(",comparacao,")","{",programa,"}"
+
+  
+
+
+
+comparacao =  numero ,op_comparacao,numero
+            | identificador, op_comparacao, identificador
+            | numero, op_comparacao, identificador
+            | identificador, op_comparacao, numero
+
+
+
+    enquantonaoestudar = "(" comparacao ")" "{" programa "}"
+                        | "(" comparacao operador_logico comparacao")" "{" programa "}"
+    
+    atelerlivros = "(" atribuicao ";" comparacao ";" incremento ")" "{" programa "}"
+                    | "(" atribuicao ";" comparacao operaador_logico comparacao ";" incremento ")" "{" programa "}"
+
+    comparacao = numeros operador_Comparacao numeros
+                | variavel operador_Comparacao variavel
+                | numeros operador_Comparacao variavel
+                | variavel operador_Comparacao variavel
+    
+    atribuicao = variavel operador_atribuição numeros ";"
+                | variavel operador_atribuição variavel ";"
+    
+    incremento = numeros operador_especial
+                | variavel operador_atribuição variavel operador_aritiméticos numeros ";"
+    
+    expressao = variavel operador_atribuição numeros operador_aritiméticos numeros ";"
+                | variavel operador_atribuição variaveis operador_aritiméticos variaveis ";"
+                | variavel operador_atribuição variavel operador_aritiméticos numeros ";"
+                | variavel operador_atribuição numeros operador_aritiméticos variavel ";"
+
+/*OS BASICOS*/
+numero = {"0...9"}+
+identificador =  {"a...z"}+
+                            
+/*OPERADORES*/
+  
+op_comparacao = "==" | ">" | "<" | ">=" | "<=" | "!="
+
+op_atribuicao = "="
+
+op_aritmetico = "+" | "-" | "*" | "/"
