@@ -3,9 +3,9 @@ inicio = "comecaaqui",{dec_variavel}*,programa,"terminaaqui"
 
 dec_variavel = int | float
 
-int = "int", identificador, operador_atribuicao, numero,";"
+int = "int", identificador, op_atribuicao, numero,";"
 
-float = "float", identificador, operador_atribuicao, numero,".",numero,";"
+float = "float", identificador, op_atribuicao, numero,".",numero,";"
 
 
 
@@ -13,11 +13,19 @@ programa = if | while | for | expressao |[programa]
 
 if =  "if","(",comparacao,")","{" programa "}"
     | "if","(",comparacao,")","{" programa "}",["else","{",programa,"}"]
-
-
+    
 while= "while","(",comparacao,")","{",programa,"}"
 
-  
+for = "for","(",atribuicao, comparacao,";",identificador,incremento,")","{",programa,"}"
+
+expressao = identificador, op_atribuicao,numero,op_aritmetico,numero,";"
+
+
+
+    expressao = variavel operador_atribuição numeros operador_aritiméticos numeros ";"
+                | variavel operador_atribuição variaveis operador_aritiméticos variaveis ";"
+                | variavel operador_atribuição variavel operador_aritiméticos numeros ";"
+                | variavel operador_atribuição numeros operador_aritiméticos variavel ";"
 
 
 
@@ -26,29 +34,14 @@ comparacao =  numero ,op_comparacao,numero
             | numero, op_comparacao, identificador
             | identificador, op_comparacao, numero
 
-
-
-    enquantonaoestudar = "(" comparacao ")" "{" programa "}"
-                        | "(" comparacao operador_logico comparacao")" "{" programa "}"
+atribuicao = identificador,op_atribuicao,numero,";"
+            |identificador,op_atribuicao,identificador,";"
+            |numero, op_atribuica
     
-    atelerlivros = "(" atribuicao ";" comparacao ";" incremento ")" "{" programa "}"
-                    | "(" atribuicao ";" comparacao operaador_logico comparacao ";" incremento ")" "{" programa "}"
-
-    comparacao = numeros operador_Comparacao numeros
-                | variavel operador_Comparacao variavel
-                | numeros operador_Comparacao variavel
-                | variavel operador_Comparacao variavel
     
-    atribuicao = variavel operador_atribuição numeros ";"
-                | variavel operador_atribuição variavel ";"
-    
-    incremento = numeros operador_especial
-                | variavel operador_atribuição variavel operador_aritiméticos numeros ";"
-    
-    expressao = variavel operador_atribuição numeros operador_aritiméticos numeros ";"
-                | variavel operador_atribuição variaveis operador_aritiméticos variaveis ";"
-                | variavel operador_atribuição variavel operador_aritiméticos numeros ";"
-                | variavel operador_atribuição numeros operador_aritiméticos variavel ";"
+incremento = numero,op_especial
+            | identificador,op_atribuicao,identificador,op_aritmetico,numero
+   
 
 /*OS BASICOS*/
 numero = {"0...9"}+
@@ -58,6 +51,10 @@ identificador =  {"a...z"}+
   
 op_comparacao = "==" | ">" | "<" | ">=" | "<=" | "!="
 
+op_logico = "&&" | "||"
+
 op_atribuicao = "="
 
 op_aritmetico = "+" | "-" | "*" | "/"
+
+op_especial = "++" | "--"
