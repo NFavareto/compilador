@@ -1,6 +1,6 @@
-/*BNF of Language C--*/
+/*BNF of Language MathC--*/
 
-initialize =  "comecaaqui" ,"\n", {tipos_de_variaveis}*, [comentarios]*, comandos, "terminaaqui"
+initialize =  "comecaaqui" ,"\n", [comentarios]*, {tipos_de_variaveis}*,  comandos, "terminaaqui"
 
 
 tipo_de_variaveis = int | float | exponencial
@@ -9,7 +9,7 @@ tipo_de_variaveis = int | float | exponencial
 int = "int" ,{"' '"}+, identificador,{"' '"}+,[op_atribuicao,{"' '"}+, numero],{"' '"}+,";","\n"
 float = "float",{"' '"}+, identificador,{"' '"}+, [op_atribuicao,{"' '"}+,numero,".", numero],{"' '"}+, ";","\n"
 exponencial = "exp",{"' '"}+, identificador,{"' '"}+,[op_atribuicao,{"' '"}+,numero, ([".",numero]),"e",(["+" | "-"] numero)],{"' '"}+, ";","\n"
-// exponencial = numero(.numero)?(E(+|-)?numero)?
+// exponencial = numero(.numero)?(E(+|-)?numero)?       
 
 identificador = {"a...z"}+
 numero = {"0...9"}+
