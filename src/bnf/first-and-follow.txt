@@ -1,0 +1,20 @@
+/*FIRST*/
+FIRST(initialize) = {comecaaqui}
+FIRST(tipo_de_variaveis) ={int,float,exp}
+FIRST(int)={int}
+FIRST(float)={float}
+FIRST(exponencial)={exp}
+FIRST(identificador)={a...z}
+FIRST(numero)={0...9}
+FIRST(op_atribuicao)={=}
+FIRST(op_incremento)={++,--}
+FIRST(op_relacional)={>,<,>=,<=,!=,==}
+FIRST(op_aritmetico)={+,-,*,/}
+FIRST(op_logico)={&&,||}
+FIRST(comandos)={if,while,for,a...z,terminaaqui}
+FIRST(if)={if}
+FIRST(comparacao)={0...9,a...z}
+FIRST(atribuicao)={a...z}
+FIRST(while)={while}
+FIRST(for)={for}
+FIRST(expressao)={a...z}
