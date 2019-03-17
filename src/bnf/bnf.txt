@@ -1,60 +1,58 @@
+/*BNF of Language C--*/
 
-inicio = "comecaaqui",{dec_variavel}*,programa,"terminaaqui"
-
-dec_variavel = int | float
-
-int = "int", identificador, op_atribuicao, numero,";"
-
-float = "float", identificador, op_atribuicao, numero,".",numero,";"
+initialize =  "comecaaqui" ,"\n", {tipos_de_variaveis}*, [comentarios]*, comandos, "terminaaqui"
 
 
-
-programa = if | while | for | expressao |[programa]
-
-if =  "if","(",comparacao,")","{" programa "}"
-    | "if","(",comparacao,")","{" programa "}",["else","{",programa,"}"]
-    
-while= "while","(",comparacao,")","{",programa,"}"
-
-for = "for","(",atribuicao, comparacao,";",identificador,incremento,")","{",programa,"}"
-
-expressao = identificador, op_atribuicao,numero,op_aritmetico,numero,";"
+tipo_de_variaveis = int | float | exponencial
 
 
+int = "int" ,{"' '"}+, identificador,{"' '"}+,[op_atribuicao,{"' '"}+, numero],{"' '"}+,";","\n"
+float = "float",{"' '"}+, identificador,{"' '"}+, [op_atribuicao,{"' '"}+,numero,".", numero],{"' '"}+, ";","\n"
+exponencial = "exp",{"' '"}+, identificador,{"' '"}+,[op_atribuicao,{"' '"}+,numero, ([".",numero]),"e",(["+" | "-"] numero)],{"' '"}+, ";","\n"
+// exponencial = numero(.numero)?(E(+|-)?numero)?
 
-    expressao = variavel operador_atribuição numeros operador_aritiméticos numeros ";"
-                | variavel operador_atribuição variaveis operador_aritiméticos variaveis ";"
-                | variavel operador_atribuição variavel operador_aritiméticos numeros ";"
-                | variavel operador_atribuição numeros operador_aritiméticos variavel ";"
-
-
-
-comparacao =  numero ,op_comparacao,numero
-            | identificador, op_comparacao, identificador
-            | numero, op_comparacao, identificador
-            | identificador, op_comparacao, numero
-
-atribuicao = identificador,op_atribuicao,numero,";"
-            |identificador,op_atribuicao,identificador,";"
-            |numero, op_atribuica
-    
-    
-incremento = numero,op_especial
-            | identificador,op_atribuicao,identificador,op_aritmetico,numero
-   
-
-/*OS BASICOS*/
+identificador = {"a...z"}+
 numero = {"0...9"}+
-identificador =  {"a...z"}+
-                            
-/*OPERADORES*/
-  
-op_comparacao = "==" | ">" | "<" | ">=" | "<=" | "!="
 
-op_logico = "&&" | "||"
+
 
 op_atribuicao = "="
+op_incremento = "++" | "--"
+op_relacional = ">" |  "<"  |  ">=" | "<=" | "!=" | "=="
+op_aritmetico = "+" | "-" | "*" | "/" 
+op_logico = "&&" | "||" 
 
-op_aritmetico = "+" | "-" | "*" | "/"
 
-op_especial = "++" | "--"
+comandos  = if   |  while  | for |  expressao  | [comandos]
+
+
+if = "if" ,{"' '"}+, "(",{"' '"}+, comparacao,{"' '"}+, ")",{"' '"}+,"{","\n",comandos,"\n", "}","\n",["else",{"' '"}+,"{","\n",comandos,"\n","}","\n"]
+        | "if" ,{"' '"}+, "(",{"' '"}+, comparacao,{"' '"}+,[op_logico,{"' '"}+, comparacao]+,{"' '"}+, ")","\n","{","\n", comandos,"\n", "}","\n",["else",{"' '"}+,"{","\n",comandos,"\n","}","\n"]
+
+
+comparacao = numero,{"' '"}+, op_relacional,{"' '"}+, numero
+        | identificador ,{"' '"}+, op_relacional,{"' '"}+, numero
+
+        |  identificador,{"' '"}+, op_relaciona,{"' '"}+, identificador
+
+        | numero,{"' '"}+, op_relacional,{"' '"}+, identificador
+
+    
+atribuicao = identificador,{"' '"}+, op_atribuicao,{"' '"}+, numero,{"' '"}+, ";","\n"
+        | identificador,{"' '"}+,op_atribuicao,{"' '"}+, identificador,{"' '"}+, ";","\n"
+        
+while = "while",{"' '"}+,"(",{"' '"}+,comparacao,{"' '"}+,[op_logico,{"' '"}+,comparacao]*,{"' '"}+,")",{"' '"}+,"{","\n", comandos,"\n", "}","\n"
+
+
+for = "for",{"' '"}+,"(",{"' '"}+,atribuicao,{"' '"}+,";",{"' '"}+,comparacao,{"' '"}+, ";",{"' '"}+, identificador,{"' '"}+, op_incremento,{"' '"}+, ")",{"' '"}+,"{","\n",comandos,"\n","}""\n"
+
+
+expressao = identificador,{"' '"}+, op_atribuicao,{"' '"}+, numero,{"' '"}+, op_aritmeticos,{"' '"}+,numero,{"' '"}+,";","\n"
+        |   identificador,{"' '"}+, op_atribuicao,{"' '"}+, numero,{"' '"}+, op_aritmeticos,{"' '"}+,identificador,{"' '"}+,";","\n"
+        |   identificador,{"' '"}+, op_atribuicao,{"' '"}+, identificador,{"' '"}+, op_aritmeticos,{"' '"}+,numero,{"' '"}+,";","\n"
+        |   identificador,{"' '"}+, op_atribuicao,{"' '"}+, identificador ,{"' '"}+, op_aritmeticos,{"' '"}+,identificador,{"' '"}+,";","\n"
+
+comentarios =  "//",{"' '"}+, [(identificador | numero | simbolo)]*,{"' '"}+, ";","\n"
+            | "/*",{"' '"}+, [(identificador | numero | simbolo)]*,{"' '"}+,"*/",{"' '"}+,";","\n"
+
+simbolo - ( “!” | “@” | “#” | “$” | “&” | “(“ | “)” | “[“ | “]” | “{“ | “}” | “\” | "/" | “?” | “,” | “.”  )

@@ -18,3 +18,7 @@ FIRST(atribuicao)={a...z}
 FIRST(while)={while}
 FIRST(for)={for}
 FIRST(expressao)={a...z}
+FIRST(comentarios)={//,/*}
+FIRST(simbolo)={!,@,#,$,&,(,),[,],{,},\,/,?, , ,.}
+
+/*FOLLOW*/
