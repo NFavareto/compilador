@@ -5,11 +5,16 @@ mixin navbar()
             |  #[strong Compilador] #[span(style='font-size:13px;') v1.0.0] 
         #navbarNavAltMarkup.collapse.navbar-collapse 
             .navbar-nav.navbar-fontcolor
-                form.nav-item.nav-link.active(action="/analise-lexica", method="get" target='_blank')  
-                    button(type="submit" style='background-color:transparent; border:0')
-                        img.d-inline-block(src='/images/play.svg' width='28' height='28' alt='')
-                a.nav-item.nav-link.active(href='#')
-                    img.d-inline-block(src='/images/open-folder.svg' width='28' height='28' alt='')
+                // form.nav-item.nav-link.active(action="/analise-lexica", method="post" target='_blank')  
+                button(type="button" style='background-color:transparent; border:0')
+                    img.d-inline-block(src='/images/play.svg' width='28' height='28' alt='' id="compilar")
+                li.nav-item
+                    form#aquivoExterno(method='post', enctype='multipart/form-data')
+                        a.nav-link
+                            label(for='arq_uploads')
+                                img.d-inline-block(src='/images/open-folder.svg' width='28' height='28' alt='')
+                            input#arq_uploads(type='file', name='arq_uploads', accept='.txt', style='opacity: 0')
+            
 
 mixin navbarDefault()
     nav.navbar.navbar-expand-lg(style='min-height: 80px; background: black; ')

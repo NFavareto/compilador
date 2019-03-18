@@ -16,14 +16,15 @@
     "request-promise": "^4.2.2"
   },
   "devDependencies": {
-    "nodemon": "^1.18.10",
+    "body-parser": "^1.18.3",
+    "chai": "^4.2.0",
     "eslint": "^5.12.0",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-loader": "^2.1.1",
     "eslint-plugin-import": "^2.14.0",
     "mocha": "^5.2.0",
-    "sinon": "^7.2.3",
-    "chai": "^4.2.0"
+    "nodemon": "^1.18.10",
+    "sinon": "^7.2.3"
   },
   "repository": {
     "type": "git",

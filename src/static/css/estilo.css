@@ -1,6 +1,3 @@
-/* 
-    *** Documento inteiro e navbar superior9menu
-*/
 
 * {
     padding-left: 0px;
@@ -16,9 +13,6 @@ body {
     
 }
 
-/*
-    *** section de console
-*/
 #console {
     height: 50vh;
     overflow-y: scroll;
@@ -42,9 +36,7 @@ body {
 	border: 2px solid #555555;
 }
 
-/*
-    *** section de tabela
-*/
+
 #tabela {
     height: 22vh;
     overflow-y: scroll;
@@ -69,9 +61,6 @@ body {
 }
 
 
-/*
-    *** section de editor de códigos
-*/
 #code {
     flex: 1;
     overflow-y: scroll;
@@ -79,7 +68,7 @@ body {
 
 #code::-webkit-scrollbar-track
 {
-	/* -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); */
+	
 	background-color: rgba(0,0,0,0.2);
 }
 
@@ -96,7 +85,7 @@ body {
 }
 
 p {
-    /* retirnado o pontilhado de seleção do P editor*/
+
     outline: none;
 }
 
@@ -105,7 +94,6 @@ p {
 }
 
 #editor {
-    /*Cor do funco e das letras da section editor*/
     color: #555555;
 }
 
@@ -124,19 +112,11 @@ form button {
     height: 0px;
 }
 
-/* CSS Styles */
-/*
-#linha > div{
-    background-color: rgba(0,0,0,0.05);
-}
-*/
 
 #linha > div:focus{
-    /*background: #FFFF00;*/
     background: #3a3d41;
 }
 #linha > div::selection{
-    /*background: #00FF00;*/
     background: #0662d2;
 }
 #linha > div:hover{
@@ -151,6 +131,10 @@ form button {
         width:100%;
         height:100%;
 } 
+
+.error-line{
+    border: 1px solid #ff0000;
+}
 
 .navbar-fontcolor{
     color:#ffff;
@@ -191,6 +175,6 @@ footer{
     height: 200px;
     overflow: auto;
   }
-  .table-wrapper-scroll-y {
+.table-wrapper-scroll-y {
     display: block;
-  }
+}

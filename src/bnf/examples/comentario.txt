@@ -1,0 +1,5 @@
+/*
+    comentario em bloco
+*/
+
+// comentario em linha

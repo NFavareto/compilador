@@ -1,0 +1,16 @@
+comecaaqui
+
+int i  = 2 ;
+float f = 3 ;
+exp e = 3.e43 ;
+
+// int i = 2 ;
+
+/*
+int i  = 2 ;
+float f = 3 ;
+exp e = 3.e43 ;
+
+*/
+
+terminaaqui

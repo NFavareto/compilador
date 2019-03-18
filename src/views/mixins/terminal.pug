@@ -6,5 +6,17 @@ mixin terminal()
         .form-group.m-0
             textarea.form-control.terminal-textarea.m-0(rows=20 readonly='' )
 
+mixin terminalNew()
+    // seção de saida de erros
+    section.terminal
+        nav.terminal-bgheader
+            #nav-tab.nav.nav-tabs(role='tablist')
+                a#nav-home-tab.nav-item.nav-link.terminal-textheader(data-toggle='tab', href='#console', role='tab', aria-controls='console', aria-selected='true')  #[strong Terminal] 
+                a#nav-profile-tab.nav-item.nav-link.terminal-textheader(data-toggle='tab', href='#tabela', role='tab', aria-controls='tabela', aria-selected='false')  #[strong Tabela] 
+        #nav-tabContent.tab-content.col-md-12.terminal-bgheader
+            // Terminal
+            #console.tab-pane.fade.show.active.form-control.terminal-textarea(role='tabpanel', aria-labelledby='nav-home-tab', style='height:500px;')
+            // Table
+            #tabela.tab-pane.fade(role='tabpanel', aria-labelledby='nav-profile-tab',style='height:500px;background-color:#e9ecef;'   )
             
 
