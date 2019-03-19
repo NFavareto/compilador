@@ -16,6 +16,7 @@ exports.getTokens = async function getTokens(req, res, next) {
     next(err)
   }
 }
+
 exports.getAnalysis = async function getAnalyze(req, res, next) {
   try {
     const body = req.body

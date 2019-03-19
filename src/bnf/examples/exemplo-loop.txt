@@ -1,0 +1,28 @@
+comecaaqui
+
+int x 
+
+for  ( i = 2 ; i < j ; i ++) {
+    j ++ ;
+}
+
+while ( i <= 10)
+{
+    x = x + 10
+}
+
+if ( y == x ) {
+    y = 1.e123
+}
+else {
+    x = 3.33
+}
+
+/*
+int i  = 2 ;
+float f = 3 ;
+exp e = 3.e43 ;
+
+*/
+
+terminaaqui

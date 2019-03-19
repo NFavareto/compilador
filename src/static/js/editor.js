@@ -1,7 +1,9 @@
+const tokenController = require('../../controller/token.controller')
+
 /* eslint-disable func-names */
 // Funções para melhorar o Funcionamento
 function drawLines() {
-  const maxLinha = $('#linha > div').length + ($('#linha').html().indexOf('<div>') == 0 ? 0 : 1)
+  const maxLinha = $('#linha > div').length + ($('#linha').html().indexOf('<div>') === 0 ? 0 : 1)
   const linhasDesenhadas = $('#numeracao > input').length
 
   // criando numeração pras linhas
@@ -31,6 +33,45 @@ function uploadCodeInEditorSection(textOriginal) {
     textReturn += `<div>${linhas[i]}</div>`
   }
   return textReturn
+}
+
+function getTable(analysis) {
+  for (let i = 0; i < analysis.lexical.length; i++) {
+    for (let j = 0; j < analysis.lexical[i].symbols.length; j++) {
+      // verifica comentario simples
+      if (analysis.lexical[i].symbols[j].name === 't_comentario_simples') {
+        j = analysis.lexical[i].symbols.length
+      } else if (analysis.lexical[i].symbols[j].name === 't_abr_comentario_composto') {
+        const commentBlock = getCommentBlock(analysis)
+        if (commentBlock.status) {
+          j = commentBlock.j
+          i = commentBlock.i
+        }
+      } else if (analysis.lexical[i].symbols[j].name !== 't_indexIgnore') {
+        $('#tabela #tabelaSimbolos #tabelaSimbolos-corpo').append(`<tr>
+              <th scope="row">${analysis.lexical[i].symbols[j].name}</th>
+              <th scope="row">${analysis.lexical[i].symbols[j].token}</th>
+              </tr>`)
+      }
+    }
+  }
+}
+
+async function getHeaderTable() {
+  $('#tabela').html('')
+  $('#tabela').text('')
+  $('#tabela').html(` 
+          <table id="tabelaSimbolos" class="table table-center table-striped">
+              <thead class='thead-dark'>
+                  <tr>
+                      <th scope="col">Cadeia</th>
+                      <th scope="col">Token</th>
+                  </tr>
+              </thead>
+              <tbody id="tabelaSimbolos-corpo">
+              </tbody>
+          </table>    
+      `)
 }
 
 (($, undefined) => {
@@ -106,30 +147,6 @@ $('#linha').keydown((e) => {
 })
 
 
-function getCommentBlock(analysis) {
-  // apenas um fecha comentario
-  const block = {
-    i: null,
-    j: null,
-    status: false,
-  }
-
-  let i
-  let j
-
-  for (i = 0; i < analysis.lexical.length; i++) {
-    for (j = 0; j < analysis.lexical[i].symbols.length; j++) {
-      if (analysis.lexical[i].symbols[j].name === 't_fecha_comentario_composto') {
-        block.j = j
-        block.i = i
-        block.status = true
-      }
-    }
-  }
-
-  return block
-}
-
 $('#compilar').click(() => {
   const codigo = $('#linha').html()
 
@@ -138,41 +155,23 @@ $('#compilar').click(() => {
     method: 'post',
     data: { codigo },
     success: (analysis) => {
-      $('#tabela').html('')
-      $('#tabela').text('')
-      $('#tabela').html(` 
-          <table id="tabelaSimbolos" class="table table-center table-striped">
-              <thead class='thead-dark'>
-                  <tr>
-                      <th scope="col">Cadeia</th>
-                      <th scope="col">Token</th>
-                  </tr>
-              </thead>
-              <tbody id="tabelaSimbolos-corpo">
-              </tbody>
-          </table>    
-      `)
-      console.log(analysis.lexical)
-      for (let i = 0; i < analysis.lexical.length; i++) {
-        for (let j = 0; j < analysis.lexical[i].symbols.length; j++) {
-          // verifica comentario simples
-          if (analysis.lexical[i].symbols[j].name === 't_comentario_simples') {
-            j = analysis.lexical[i].symbols.length
-          } else if (analysis.lexical[i].symbols[j].name === 't_abr_comentario_composto') {
-            const commentBlock = getCommentBlock(analysis)
-            if (commentBlock.status) {
-              j = commentBlock.j
-              i = commentBlock.i
-            }
-            // if (resultLexical.erro.status) { erro.push(resultLexical) }
-          } else if (analysis.lexical[i].symbols[j].name !== 't_indexIgnore') {
-            $('#tabela #tabelaSimbolos #tabelaSimbolos-corpo').append(`<tr>
-                  <th scope="row">${analysis.lexical[i].symbols[j].name}</th>
-                  <th scope="row">${analysis.lexical[i].symbols[j].token}</th>
-                  </tr>`)
-          }
-        }
-      }
+      getHeaderTable().then(() => {
+        getTable(analysis)
+      })
+      getErrors(analysis).then((errors) => {
+        console.log(errors)
+
+        // let logError = ''
+        // for (let i = 0; i < errors.length; i++) {
+        //   logError += `${errors[i].error.msg} <br>`
+        // }
+
+        // // log
+        // $('#console').text('')
+        // $('#console').html(`<br> ${logError}`)
+      })
+
+      
     },
   })
 })
