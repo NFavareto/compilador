@@ -4,37 +4,11 @@ const {
   reservedWords,
   number,
   words,
-  index,
 } = require('../model/tokens')
-
 
 /** get functions */
 
-module.exports.getCommentBlock = function getCommentBlock(analysis) {
-  // apenas um fecha comentario
-  const block = {
-    i: null,
-    j: null,
-    status: false,
-  }
-
-  let i
-  let j
-
-  for (i = 0; i < analysis.lexical.length; i++) {
-    for (j = 0; j < analysis.lexical[i].symbols.length; j++) {
-      if (analysis.lexical[i].symbols[j].name === 't_fecha_comentario_composto') {
-        block.j = j
-        block.i = i
-        block.status = true
-      }
-    }
-  }
-
-  return block
-}
-
-
+// return token table  with all tokens
 module.exports.getTokenTable = async function getTokenTable(code) {
   const data = []
 
@@ -45,28 +19,7 @@ module.exports.getTokenTable = async function getTokenTable(code) {
   return data
 }
 
-module.exports.getErrors = async function getErrors(analysis) {
-  const errors = []
-  const error = {
-    msg: '',
-    token: '',
-    line: 0,
-    column: 0,
-  }
-
-  for (let i = 0; i < analysis.lexical.length; i++) {
-    for (let j = 0; j < analysis.lexical[i].symbols.length; j++) {
-      if (analysis.lexical[i].symbols[j].name === 't_invalido') {
-        error.msg = 'Erro Léxico - Token inválido'
-        error.line = i
-        error.token = analysis.lexical[i].symbols[j].token
-        errors.push(error)
-      }
-    }
-  }
-  return errors
-}
-
+// one or more symbols(tokens) together
 module.exports.getSentence = function getSentence(data, lineNumber) {
   const sentence = {
     symbols: [],
@@ -74,6 +27,7 @@ module.exports.getSentence = function getSentence(data, lineNumber) {
   }
   // divide a  string em array, usando os espaços em branco
   const auxSetence = data.split(' ')
+  console.log(auxSetence)
   const symbols = []
   let symbol = {
     name: '',
@@ -87,11 +41,17 @@ module.exports.getSentence = function getSentence(data, lineNumber) {
     if (symbol === null) { symbol = this.isTokenOperators(e) }
     if (symbol === null) { symbol = this.isTokenReservedWords(e) }
     if (symbol === null) { symbol = this.isTokenNumber(e) }
+
     if (symbol === null) { symbol = this.isTokenWord(e) }
 
     if (symbol === null) { symbol = this.isTokenIndex(e) }
+
     if (symbol === null) {
-      symbol.status = false
+      symbol = {
+        name: 't_invalido',
+        token: e,
+        status: false,
+      }
     }
     symbols.push(symbol)
   })
@@ -101,33 +61,8 @@ module.exports.getSentence = function getSentence(data, lineNumber) {
   return sentence
 }
 
-module.exports.getSymbols = async function getSymbols(sentence) {
-  const symbols = []
-  let symbol = {
-    name: '',
-    token: '',
-    status: true,
-  }
 
-  sentence.forEach((data) => {
-    // Verifica qual o tipo de token esse simbolo possui
-    symbol = this.isTokenSpecialCharacters(data)
-    if (symbol === null) { symbol = this.isTokenOperators(data) }
-    if (symbol === null) { symbol = this.isTokenReservedWords(data) }
-    if (symbol === null) { symbol = this.isTokenNumber(data) }
-    if (symbol === null) { symbol = this.isTokenWord(data) }
-
-    if (symbol === null) { symbol = this.isTokenIndex(data) }
-    if (symbol === null) {
-      symbol.status = false
-    }
-    symbols.push(symbol)
-  })
-
-  return symbols
-}
-
-/** Verifica os tokens */
+/** Verify the tokens */
 module.exports.isTokenSpecialCharacters = function isTokenSpecialCharacters(data) {
   let token = null
 
@@ -169,11 +104,6 @@ module.exports.isTokenSpecialCharacters = function isTokenSpecialCharacters(data
       break
 
     default:
-      token = {
-        name: 't_invalido',
-        token: data,
-        status: false,
-      }
 
       break
   }
@@ -251,14 +181,8 @@ module.exports.isTokenOperators = function isTokenOperators(data) {
       break
 
     default:
-      token = {
-        name: 't_invalido',
-        token: data,
-        status: false,
-      }
       break
   }
-
   return token
 }
 
@@ -303,11 +227,6 @@ module.exports.isTokenReservedWords = function isTokenReservedWords(data) {
       break
 
     default:
-      token = {
-        name: 't_invalido',
-        token: data,
-        status: false,
-      }
 
       break
   }
@@ -316,87 +235,70 @@ module.exports.isTokenReservedWords = function isTokenReservedWords(data) {
 }
 
 module.exports.isTokenNumber = function isTokenNumber(data) {
-  let token = {
+  const token = {
     name: '',
     token: '',
     status: false,
   }
   // int
-  let regExp = new RegExp(number.t_numberInt.token)
+  let regExp = new RegExp(number.t_numberInt.token, 'g')
   if (regExp.test(data)) {
     token.name = number.t_numberInt.name
     token.token = data
     token.status = true
   } else {
     // float
-    regExp = new RegExp(number.t_numberFloat.token)
+    regExp = new RegExp(number.t_numberFloat.token, 'g')
     if (regExp.test(data)) {
       token.name = number.t_numberFloat.name
       token.token = data
       token.status = true
     } else {
       // exponencial
-      regExp = new RegExp(number.t_numberExp.token)
+      regExp = new RegExp(number.t_numberExp.token, 'g')
+
       if (regExp.test(data)) {
         token.name = number.t_numberExp.name
         token.token = data
         token.status = true
-      } else {
-        token = {
-          name: 't_invalido',
-          token: data,
-          status: false,
-        }
       }
     }
   }
+  if (token.status === false) { return null }
   return token
 }
 
 module.exports.isTokenWord = function isTokenWord(data) {
-  let token = {
+  const token = {
     name: '',
     token: '',
     status: false,
   }
   // int
-  const regExp = new RegExp(words.t_identificador.token)
+  const regExp = new RegExp(words.t_identificador.token, 'g')
   if (regExp.test(data)) {
     token.name = words.t_identificador.name
     token.token = data
     token.status = true
-  } else {
-    token = {
-      name: 't_invalido',
-      token: data,
-      status: false,
-    }
   }
+
+  if (!token.status) { return null }
+
+
   return token
 }
 
 module.exports.isTokenIndex = function isTokenIndex(data) {
-  let token = {
+  const token = {
     name: '',
     token: '',
     status: false,
   }
 
-  const regExp = new RegExp(index)
-  if (regExp.test(data)) {
+  if (data === '' || data === '\\n') {
     token.name = 't_indexIgnore'
     token.status = true
-  } else {
-    token = {
-      name: 't_invalido',
-      token: data,
-      status: false,
-    }
-  }
+    token.token = data
+  } else { return null }
   return token
-}
-
-module.exports = {
-  getTokenTable,
-  getErrors,
 }

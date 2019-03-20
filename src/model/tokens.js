@@ -61,7 +61,7 @@ const specialCharactersRules = {
 
 
 // valores que devem ser ignorados na analise lexica e sintatica
-const index = "[' '|\n]*"
+const index = '(\\s|\\n)'
 
 
 module.exports = {

@@ -1,4 +1,4 @@
-const tokenController = require('./token.controller')
+const tokenController = require('./lexical.controller')
 
 exports.index = async function index(req, res, next) {
   try {
@@ -8,16 +8,7 @@ exports.index = async function index(req, res, next) {
   }
 }
 
-
-exports.getTokens = async function getTokens(req, res, next) {
-  try {
-    res.render('tokens')
-  } catch (err) {
-    next(err)
-  }
-}
-
-exports.getAnalysis = async function getAnalyze(req, res, next) {
+exports.getLexicalAnalysis = async function getLexicalAnalysis(req, res, next) {
   try {
     const body = req.body
     const lexeme = body.codigo.toString().split('<div>')

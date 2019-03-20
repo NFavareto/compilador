@@ -1,7 +1,96 @@
-const tokenController = require('../../controller/token.controller')
 
 /* eslint-disable func-names */
-// Funções para melhorar o Funcionamento
+
+/** Functions for Lexical Analysis */
+
+// In lexical analysis, the block comment  is ignored.
+function getCommentBlock(analysis) {
+  // apenas um fecha comentario
+  const block = {
+    i: null,
+    j: null,
+    status: false,
+  }
+
+  let i
+  let j
+
+  for (i = 0; i < analysis.lexical.length; i++) {
+    for (j = 0; j < analysis.lexical[i].symbols.length; j++) {
+      if (analysis.lexical[i].symbols[j].name === 't_fecha_comentario_composto') {
+        block.j = j
+        block.i = i
+        block.status = true
+      }
+    }
+  }
+
+  return block
+}
+
+// If token doesn't exists, is a lexical error.
+async function getLexicalErrors(analysis) {
+  const errors = []
+  const error = {
+    msg: '',
+    token: '',
+    line: 0,
+    column: 0,
+  }
+
+  for (let i = 0; i < analysis.lexical.length; i++) {
+    for (let j = 0; j < analysis.lexical[i].symbols.length; j++) {
+      console.log(analysis.lexical[i].symbols[j].name)
+      if (analysis.lexical[i].symbols[j].name === 't_invalido') {
+        error.msg = 'Erro Léxico - Token inválido'
+        error.line = i
+        error.token = analysis.lexical[i].symbols[j].token
+        errors.push(error)
+        console.log('TOKEN', analysis.lexical[i].symbols[j].token)
+      }
+    }
+  }
+  console.log(errors.length)
+  return errors
+}
+
+
+function getTable(analysis) {
+  for (let i = 0; i < analysis.lexical.length; i++) {
+    for (let j = 0; j < analysis.lexical[i].symbols.length; j++) {
+      // verifica comentario simples
+      if (analysis.lexical[i].symbols[j].name === 't_comentario_simples') {
+        j = analysis.lexical[i].symbols.length
+      } else if (analysis.lexical[i].symbols[j].name === 't_abr_comentario_composto') {
+        const commentBlock = getCommentBlock(analysis)
+        if (commentBlock.status) {
+          j = commentBlock.j
+          i = commentBlock.i
+        }
+      } else if (analysis.lexical[i].symbols[j].name !== 't_indexIgnore' && analysis.lexical[i].symbols[i].name !== 't_invalido') {
+        $('#tabela #tabelaSimbolos #tabelaSimbolos-corpo').append(`<tr>
+              <th scope="row">${analysis.lexical[i].symbols[j].name}</th>
+              <th scope="row">${analysis.lexical[i].symbols[j].token}</th>
+              </tr>`)
+      }
+    }
+  }
+}
+
+/** View Manipulation */
+
+function uploadCodeInEditorSection(textOriginal) {
+  const linhas = textOriginal.replace(/(?:\r\n|\r|\n)/g, '\n').split('\n')
+
+  let textReturn = ''
+
+  for (i in linhas) {
+    textReturn += `<div>${linhas[i]}</div>`
+  }
+  return textReturn
+}
+
+
 function drawLines() {
   const maxLinha = $('#linha > div').length + ($('#linha').html().indexOf('<div>') === 0 ? 0 : 1)
   const linhasDesenhadas = $('#numeracao > input').length
@@ -24,38 +113,6 @@ function drawLines() {
   }
 }
 
-function uploadCodeInEditorSection(textOriginal) {
-  const linhas = textOriginal.replace(/(?:\r\n|\r|\n)/g, '\n').split('\n')
-
-  let textReturn = ''
-
-  for (i in linhas) {
-    textReturn += `<div>${linhas[i]}</div>`
-  }
-  return textReturn
-}
-
-function getTable(analysis) {
-  for (let i = 0; i < analysis.lexical.length; i++) {
-    for (let j = 0; j < analysis.lexical[i].symbols.length; j++) {
-      // verifica comentario simples
-      if (analysis.lexical[i].symbols[j].name === 't_comentario_simples') {
-        j = analysis.lexical[i].symbols.length
-      } else if (analysis.lexical[i].symbols[j].name === 't_abr_comentario_composto') {
-        const commentBlock = getCommentBlock(analysis)
-        if (commentBlock.status) {
-          j = commentBlock.j
-          i = commentBlock.i
-        }
-      } else if (analysis.lexical[i].symbols[j].name !== 't_indexIgnore') {
-        $('#tabela #tabelaSimbolos #tabelaSimbolos-corpo').append(`<tr>
-              <th scope="row">${analysis.lexical[i].symbols[j].name}</th>
-              <th scope="row">${analysis.lexical[i].symbols[j].token}</th>
-              </tr>`)
-      }
-    }
-  }
-}
 
 async function getHeaderTable() {
   $('#tabela').html('')
@@ -91,8 +148,6 @@ async function getHeaderTable() {
   }
 })(jQuery)
 
-/** Funções que manipulam Linhas */
-// Função para criar linhas ao carregar a página
 $(document).ready(() => {
   // trazendo o foco para a primeira linha
   $('#linha').text('').focus()
@@ -107,8 +162,6 @@ $('#linha').on('input', () => {
   drawLines()
 })
 
-
-// Função para abrir arquivo selecionado
 $('input[type=file]').bind('change', function () {
   if (this.files.length !== 1) return
 
@@ -116,7 +169,7 @@ $('input[type=file]').bind('change', function () {
 
   const reader = new FileReader()
   reader.onload = function (e) {
-    if (e.target.result.indexOf('data:text/plain;base64,') != 0) {
+    if (e.target.result.indexOf('data:text/plain;base64,') !== 0) {
       console.error('Falha ao ser o arquivo, não é um texto!')
       return
     }
@@ -155,23 +208,42 @@ $('#compilar').click(() => {
     method: 'post',
     data: { codigo },
     success: (analysis) => {
-      getHeaderTable().then(() => {
-        getTable(analysis)
+      getHeaderTable()
+      console.log(analysis)
+      getLexicalErrors(analysis).then((errors) => {
+        console.log(errors.length)
+        let logError = ''
+        for (let i = 0; i < errors.length; i++) {
+          console.log('here')
+          logError += `<strong>${errors[i].msg}</strong>: ${errors[i].token}<br>`
+        }
+
+        for (let i = 0; i < analysis.lexical.length; i++) {
+          for (let j = 0; j < analysis.lexical[i].symbols.length; j++) {
+            // verifica comentario simples
+            if (analysis.lexical[i].symbols[j].name === 't_comentario_simples') {
+              j = analysis.lexical[i].symbols.length
+            } else if (analysis.lexical[i].symbols[j].name === 't_abr_comentario_composto') {
+              const commentBlock = getCommentBlock(analysis)
+              if (commentBlock.status) {
+                j = commentBlock.j
+                i = commentBlock.i
+              }
+            } else if (analysis.lexical[i].symbols[j].name !== 't_indexIgnore' && analysis.lexical[i].symbols[j].name !== 't_invalido') {
+              $('#tabela #tabelaSimbolos #tabelaSimbolos-corpo').append(`<tr>
+                    <th scope="row">${analysis.lexical[i].symbols[j].name}</th>
+                    <th scope="row">${analysis.lexical[i].symbols[j].token}</th>
+                    </tr>`)
+            }
+          }
+        }
+
+        console.log('LOG', logError)
+
+        // log
+        $('#console').text('')
+        $('#console').html(`<br> ${logError}`)
       })
-      getErrors(analysis).then((errors) => {
-        console.log(errors)
-
-        // let logError = ''
-        // for (let i = 0; i < errors.length; i++) {
-        //   logError += `${errors[i].error.msg} <br>`
-        // }
-
-        // // log
-        // $('#console').text('')
-        // $('#console').html(`<br> ${logError}`)
-      })
-
-      
     },
   })
 })

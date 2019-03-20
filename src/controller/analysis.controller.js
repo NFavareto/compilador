@@ -1,8 +1,4 @@
-const { specialCharactersRules } = require('./token.controller')
+// const { specialCharactersRules } = require('./lexical.controller')
+// const lexicalController = require('./lexical.controller')
 
-
-exports.verifyCommentBlock = function verifyCommentBlock(tokens, line, column {
-    //Pilha
-    
-
-}
+// // send lexical and syntax analysis
