@@ -199,10 +199,6 @@ $('#linha').keydown((e) => {
   return true
 })
 
-$('#console').change(() => {
-  console.log('mudouuuuuuuu')
-})
-
 $('#compilar').click(() => {
   const codigo = $('#linha').html()
 
