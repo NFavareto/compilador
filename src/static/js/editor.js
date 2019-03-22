@@ -31,17 +31,17 @@ function getCommentBlock(analysis) {
 // If token doesn't exists, is a lexical error.
 async function getLexicalErrors(analysis) {
   const errors = []
-  const error = {
-    msg: '',
-    token: '',
-    line: 0,
-    column: 0,
-  }
 
   for (let i = 0; i < analysis.lexical.length; i++) {
     for (let j = 0; j < analysis.lexical[i].symbols.length; j++) {
       console.log(analysis.lexical[i].symbols[j].name)
       if (analysis.lexical[i].symbols[j].name === 't_invalido') {
+        const error = {
+          msg: '',
+          token: '',
+          line: 0,
+          column: 0,
+        }
         error.msg = 'Erro Léxico - Token inválido'
         error.line = i
         error.token = analysis.lexical[i].symbols[j].token
@@ -199,6 +199,9 @@ $('#linha').keydown((e) => {
   return true
 })
 
+$('#console').change(() => {
+  console.log('mudouuuuuuuu')
+})
 
 $('#compilar').click(() => {
   const codigo = $('#linha').html()
@@ -218,6 +221,7 @@ $('#compilar').click(() => {
           logError += `<strong>${errors[i].msg}</strong>: ${errors[i].token}<br>`
         }
 
+        // cria tabela aqui
         for (let i = 0; i < analysis.lexical.length; i++) {
           for (let j = 0; j < analysis.lexical[i].symbols.length; j++) {
             // verifica comentario simples
@@ -238,9 +242,17 @@ $('#compilar').click(() => {
           }
         }
 
-        console.log('LOG', logError)
+        // limpar o log antes de alimentar
 
-        // log
+        for (let i = 0; i < errors.length; i++) { // retirando a classe
+          $('#numeracao input#contador_linha').removeClass('bg-danger')
+        }
+
+        for (let i = 0; i < errors.length; i++) {
+          // eslint-disable-next-line radix
+          $(`#numeracao input#contador_linha[value="${parseInt(errors[i].line)}"]`).addClass('bg-danger')
+        }
+
         $('#console').text('')
         $('#console').html(`<br> ${logError}`)
       })

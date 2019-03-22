@@ -19,11 +19,10 @@ FIRST(while)={while}
 FIRST(for)={for}
 FIRST(expressao)={a...z}
 FIRST(comentarios)={//,/*}
-FIRST(simbolo)={!,@,#,$,&,(,),[,],{,},\,/,?, , ,.}
 
 /*FOLLOW*/
 FOLLOW(initialize)={$}
-FOLLOW(tipo_de_variaveis) = FIRS(comandos)
+FOLLOW(tipo_de_variaveis) = FIRST(comandos)
 FOLLOW(int)=FIRST(comandos) U FIRST(tipo_de_variaveis)
 FOLLOW(float)=FIRST(comandos) U FIRST(tipo_de_variaveis)
 FOLLOW(exponencial)=FIRST(comandos) U FIRST(tipo_de_variaveis)
@@ -42,4 +41,3 @@ FOLLOW(expressao)={terminaaqui,} }
 FOLLOW(comparacao)={), ;} U FIRST(op_logico)
 FOLLOW(atribuicao)={;} U FIRST(identificador)
 FOLLOW(comentarios)=FIRST(tipo_de_variaveis)
-FOLLOW(simbolo)={;, */}
