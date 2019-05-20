@@ -15,7 +15,6 @@ module.exports.getTokenTable = async function getTokenTable(code) {
   for (let i = 0; i < code.length; i++) {
     data.push(this.getSentence(code[i], i))
   }
-
   return data
 }
 
@@ -25,9 +24,9 @@ module.exports.getSentence = function getSentence(data, lineNumber) {
     symbols: [],
     line: 0,
   }
+
   // divide a  string em array, usando os espaços em branco
   const auxSetence = data.split(' ')
-  console.log(auxSetence)
   const symbols = []
   let symbol = {
     name: '',

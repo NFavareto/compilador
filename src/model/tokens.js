@@ -5,7 +5,7 @@ const specialCharacters = {
   t_abr_parenteses: { name: 't_abr_parenteses', token: '(', status: true },
   t_fecha_parenteses: { name: 't_fecha_parenteses', token: ')', status: true },
   t_abr_colchete: { name: 't_abr_colchete', token: '{', status: true },
-  t_fecha_colchete: { name: 't_abr_parenteses', token: '}', status: true },
+  t_fecha_colchete: { name: 't_fecha_colchete', token: '}', status: true },
   t_comentario_simples: { name: 't_comentario_simples', token: '//', status: true },
   t_abr_comentario_composto: { name: 't_abr_comentario_composto', token: '/*', status: true },
   t_fecha_comentario_composto: { name: 't_fecha_comentario_composto', token: '*/', status: true },

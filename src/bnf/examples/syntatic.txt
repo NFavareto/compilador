@@ -1,0 +1,12 @@
+comecaaqui
+
+int x ; 
+
+if ( y == x ) {
+    y = 10
+}
+else {
+    x = 3.33
+}
+
+terminaaqui

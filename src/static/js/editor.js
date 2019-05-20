@@ -3,7 +3,20 @@
 
 /** Functions for Lexical Analysis */
 
-// In lexical analysis, the block comment  is ignored.
+
+async function removeClassError(errors) {
+  for (let i = 0; i < errors.length; i++) { // retirando a classe
+    $('#numeracao input#contador_linha').removeClass('bg-danger')
+  }
+}
+
+async function addClassError(errors) {
+  for (let i = 0; i < errors.length; i++) {
+    // eslint-disable-next-line radix
+    $(`#numeracao input#contador_linha[value="${parseInt(errors[i].line)}"]`).addClass('bg-danger')
+  }
+}
+
 function getCommentBlock(analysis) {
   // apenas um fecha comentario
   const block = {
@@ -24,17 +37,22 @@ function getCommentBlock(analysis) {
       }
     }
   }
-
   return block
 }
 
-// If token doesn't exists, is a lexical error.
+async function buildLexicalErrors(errors) {
+  let logError = ''
+  for (let i = 0; i < errors.length; i++) {
+    logError += `<strong>${errors[i].msg}</strong>: ${errors[i].token}<br>`
+  }
+  return logError
+}
+
 async function getLexicalErrors(analysis) {
   const errors = []
 
   for (let i = 0; i < analysis.lexical.length; i++) {
     for (let j = 0; j < analysis.lexical[i].symbols.length; j++) {
-      console.log(analysis.lexical[i].symbols[j].name)
       if (analysis.lexical[i].symbols[j].name === 't_invalido') {
         const error = {
           msg: '',
@@ -46,16 +64,13 @@ async function getLexicalErrors(analysis) {
         error.line = i
         error.token = analysis.lexical[i].symbols[j].token
         errors.push(error)
-        console.log('TOKEN', analysis.lexical[i].symbols[j].token)
       }
     }
   }
-  console.log(errors.length)
   return errors
 }
 
-
-function getTable(analysis) {
+async function buildTableTokens(analysis) {
   for (let i = 0; i < analysis.lexical.length; i++) {
     for (let j = 0; j < analysis.lexical[i].symbols.length; j++) {
       // verifica comentario simples
@@ -67,14 +82,47 @@ function getTable(analysis) {
           j = commentBlock.j
           i = commentBlock.i
         }
-      } else if (analysis.lexical[i].symbols[j].name !== 't_indexIgnore' && analysis.lexical[i].symbols[i].name !== 't_invalido') {
+      } else if (analysis.lexical[i].symbols[j].name !== 't_indexIgnore' && analysis.lexical[i].symbols[j].name !== 't_invalido') {
+        // build table symbols
         $('#tabela #tabelaSimbolos #tabelaSimbolos-corpo').append(`<tr>
-              <th scope="row">${analysis.lexical[i].symbols[j].name}</th>
+              <th scope="row">${analysis.lexical[i].line}</th>
               <th scope="row">${analysis.lexical[i].symbols[j].token}</th>
+              <th scope="row">${analysis.lexical[i].symbols[j].name}</th>
               </tr>`)
       }
     }
   }
+}
+
+
+async function buildLexicalAnalysisTable(analysis) {
+  $('#tabela').html('')
+  $('#tabela').text('')
+  $('#tabela').html(` 
+          <table id="tabelaSimbolos" class="table table-center table-striped">
+              <thead class='thead-dark'>
+                  <tr>
+                      <th scope='col'>Linha</th>
+                      <th scope="col">Lexema</th>
+                      <th scope="col">Token</th>
+                  </tr>
+              </thead>
+              <tbody id="tabelaSimbolos-corpo">
+              </tbody>
+          </table>    
+      `)
+
+  // Lexical Errors
+  getLexicalErrors(analysis).then(async (errors) => {
+    const lexicalErrors = await buildLexicalErrors(errors)
+    await removeClassError(errors)
+    await addClassError(errors)
+
+    $('#console').text('')
+    $('#console').html(`<br> ${lexicalErrors}`)
+  })
+  const tokens = await buildTableTokens(analysis)
+  return tokens
 }
 
 /** View Manipulation */
@@ -114,24 +162,7 @@ function drawLines() {
 }
 
 
-async function getHeaderTable() {
-  $('#tabela').html('')
-  $('#tabela').text('')
-  $('#tabela').html(` 
-          <table id="tabelaSimbolos" class="table table-center table-striped">
-              <thead class='thead-dark'>
-                  <tr>
-                      <th scope="col">Cadeia</th>
-                      <th scope="col">Token</th>
-                  </tr>
-              </thead>
-              <tbody id="tabelaSimbolos-corpo">
-              </tbody>
-          </table>    
-      `)
-}
-
-(($, undefined) => {
+(($) => {
   $.fn.setCursorPosition = function (pos) {
     this.each((index, elem) => {
       if (elem.setSelectionRange) {
@@ -191,9 +222,7 @@ $('#linha').keydown((e) => {
     $(window.getSelection().getRangeAt(0).startContainer).text(novo)
     $(window.getSelection().getRangeAt(0).startContainer).setCursorPosition(pos + 4)
     // $(window.getSelection().getRangeAt(0).startContainer).text();
-    console.log(e.type, pos, original, '->', novo)
     // $("#linha").trigger($.Event({type: 'keypress', which: 32, key: ' ', charCode: 32, keyCode: 32}));
-    // console.log("Posicao:", $(this).getCursorPosition());
     return false
   }
   return true
@@ -201,57 +230,12 @@ $('#linha').keydown((e) => {
 
 $('#compilar').click(() => {
   const codigo = $('#linha').html()
-
   $.ajax({
     url: '/analises',
     method: 'post',
     data: { codigo },
-    success: (analysis) => {
-      getHeaderTable()
-      console.log(analysis)
-      getLexicalErrors(analysis).then((errors) => {
-        console.log(errors.length)
-        let logError = ''
-        for (let i = 0; i < errors.length; i++) {
-          console.log('here')
-          logError += `<strong>${errors[i].msg}</strong>: ${errors[i].token}<br>`
-        }
-
-        // cria tabela aqui
-        for (let i = 0; i < analysis.lexical.length; i++) {
-          for (let j = 0; j < analysis.lexical[i].symbols.length; j++) {
-            // verifica comentario simples
-            if (analysis.lexical[i].symbols[j].name === 't_comentario_simples') {
-              j = analysis.lexical[i].symbols.length
-            } else if (analysis.lexical[i].symbols[j].name === 't_abr_comentario_composto') {
-              const commentBlock = getCommentBlock(analysis)
-              if (commentBlock.status) {
-                j = commentBlock.j
-                i = commentBlock.i
-              }
-            } else if (analysis.lexical[i].symbols[j].name !== 't_indexIgnore' && analysis.lexical[i].symbols[j].name !== 't_invalido') {
-              $('#tabela #tabelaSimbolos #tabelaSimbolos-corpo').append(`<tr>
-                    <th scope="row">${analysis.lexical[i].symbols[j].name}</th>
-                    <th scope="row">${analysis.lexical[i].symbols[j].token}</th>
-                    </tr>`)
-            }
-          }
-        }
-
-        // limpar o log antes de alimentar
-
-        for (let i = 0; i < errors.length; i++) { // retirando a classe
-          $('#numeracao input#contador_linha').removeClass('bg-danger')
-        }
-
-        for (let i = 0; i < errors.length; i++) {
-          // eslint-disable-next-line radix
-          $(`#numeracao input#contador_linha[value="${parseInt(errors[i].line)}"]`).addClass('bg-danger')
-        }
-
-        $('#console').text('')
-        $('#console').html(`<br> ${logError}`)
-      })
+    success: async (analysis) => {
+      await buildLexicalAnalysisTable(analysis)
     },
   })
 })

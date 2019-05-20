@@ -1,4 +1,5 @@
 const tokenController = require('./lexical.controller')
+const syntaxController = require('./syntax.controller')
 
 exports.index = async function index(req, res, next) {
   try {
@@ -17,10 +18,17 @@ exports.getLexicalAnalysis = async function getLexicalAnalysis(req, res, next) {
     for (let i = 0; i < lexeme.length; i++) { lexeme[i] = lexeme[i].replace('</div>', '').replace('&gt;', '>').replace('&lt;', '<').replace('&amp;&amp;', '&&') }
 
     const tokens = await tokenController.getTokenTable(lexeme)
+
+
+    await syntaxController.SyntaxAnalysis(tokens)
+
+
     const analysis = {
       lexical: tokens,
       syntax: '',
     }
+
+    console.log('pRONTO')
 
     res.send(analysis)
   } catch (err) {
