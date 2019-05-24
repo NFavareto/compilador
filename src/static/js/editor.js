@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-syntax */
 
 /* eslint-disable func-names */
 
@@ -94,7 +95,6 @@ async function buildTableTokens(analysis) {
   }
 }
 
-
 async function buildLexicalAnalysisTable(analysis) {
   $('#tabela').html('')
   $('#tabela').text('')
@@ -125,14 +125,39 @@ async function buildLexicalAnalysisTable(analysis) {
   return tokens
 }
 
+/** Syntax Analysis */
+
+
+async function buildSyntaxErrors(syntax) {
+  let logError = ''
+  for (let i = 0; i < syntax.length; i++) {
+    for (let j = 0; j < syntax[i].errors.length; j++) {
+      logError += `<strong> ERRO SINTÁTICO [ linha - ${syntax[i].line} ]</strong>${syntax[i].errors[j].code}<br>${syntax[i].errors[j].msg}<br>`
+    }
+  }
+  return logError
+}
+
+async function buildSyntaxAnalysisErrors(analysis) {
+  const syntaxErrors = await buildSyntaxErrors(analysis.syntax)
+  await removeClassError(analysis.syntax)
+  await addClassError(analysis.syntax)
+  console.log(syntaxErrors)
+  $('#consoleSyntax').text('')
+  $('#consoleSyntax').html(`<br> ${syntaxErrors}`)
+}
 /** View Manipulation */
 
 function uploadCodeInEditorSection(textOriginal) {
   const linhas = textOriginal.replace(/(?:\r\n|\r|\n)/g, '\n').split('\n')
 
   let textReturn = ''
-
-  for (i in linhas) {
+  // eslint-disable-next-line guard-for-in
+  // eslint-disable-next-line no-restricted-syntax
+  // eslint-disable-next-line guard-for-in
+  // eslint-disable-next-line no-undef
+  // eslint-disable-next-line guard-for-in
+  for (const i in linhas) {
     textReturn += `<div>${linhas[i]}</div>`
   }
   return textReturn
@@ -236,6 +261,7 @@ $('#compilar').click(() => {
     data: { codigo },
     success: async (analysis) => {
       await buildLexicalAnalysisTable(analysis)
+      await buildSyntaxAnalysisErrors(analysis)
     },
   })
 })

@@ -11,12 +11,17 @@ mixin terminalNew()
     section.terminal
         nav.terminal-bgheader
             #nav-tab.nav.nav-tabs(role='tablist')
-                a#nav-home-tab.nav-item.nav-link.terminal-textheader(data-toggle='tab', href='#console', role='tab', aria-controls='console', aria-selected='true')  #[strong Terminal] 
-                a#nav-profile-tab.nav-item.nav-link.terminal-textheader(data-toggle='tab', href='#tabela', role='tab', aria-controls='tabela', aria-selected='false')  #[strong Tabela] 
+                a#nav-home-tab.nav-item.nav-link.terminal-textheader(data-toggle='tab', href='#console', role='tab', aria-controls='console', aria-selected='true')  #[strong Log Léxico] 
+                a#nav-profile-tab.nav-item.nav-link.terminal-textheader(data-toggle='tab', href='#tabela', role='tab', aria-controls='tabela', aria-selected='false')  #[strong Tabela Léxico] 
+                a#nav-syntax-tab.nav-item.nav-link.terminal-textheader(data-toggle='tab', href='#consoleSyntax', role='tab', aria-controls='tabela', aria-selected='false')  #[strong Log Sintática]  
         #nav-tabContent.tab-content.col-md-12.terminal-bgheader
-            // Terminal
+            // Terminal Léxico
             #console.tab-pane.fade.show.active.form-control.terminal-textarea(role='tabpanel', aria-labelledby='nav-home-tab', style='height:500px;')
-            // Table
+           
+            // Table Léxico
             #tabela.tab-pane.fade(role='tabpanel', aria-labelledby='nav-profile-tab',style='height:500px;background-color:#e9ecef;'   )
+            
+            //Terminal Sintático
+            #consoleSyntax.tab-pane.fade.show.active.form-control.terminal-textarea(role='tabpanel', aria-labelledby='nav-syntax-tab', style='height:500px;')
             
 

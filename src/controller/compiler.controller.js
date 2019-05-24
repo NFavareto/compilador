@@ -20,15 +20,13 @@ exports.getLexicalAnalysis = async function getLexicalAnalysis(req, res, next) {
     const tokens = await tokenController.getTokenTable(lexeme)
 
 
-    await syntaxController.SyntaxAnalysis(tokens)
+    const syntax = await syntaxController.SyntaxAnalysis(tokens)
 
 
     const analysis = {
       lexical: tokens,
-      syntax: '',
+      syntax,
     }
-
-    console.log('pRONTO')
 
     res.send(analysis)
   } catch (err) {
